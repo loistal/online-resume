@@ -17,7 +17,7 @@ var bio = {
         "Grunt",
         "GitHub"
     ],
-    "bioPic": "img/profile-picture.jpg"
+    "biopic": "img/profile-picture.jpg"
 };
 
 var education = {
@@ -45,7 +45,7 @@ var work = {
         "title": "Software Developer, Intern",
         "location": "Tahiti, French Polynesia",
         "dates": "Jul. 2016 -  Sep. 2016",
-        "description": "Investigation and documentation of the API of the Odoo framework. The technical documentation is currently used by the company's technicians for the development of Odoo plugins.  I learnt and used various development skills such as: Python, XML, HTML, CSS, and the Unix command line."
+        "description": "Investigation and documentation of the API of the Odoo CRM. The technical documentation is currently used by the company's technicians for the development of Odoo plugins.  I learnt and used various development skills such as: Python, XML, HTML, CSS, and the Unix command line."
     }]
 };
 
@@ -68,46 +68,51 @@ var projects = {
 };
 
 // HEADER
-var personName = HTMLheaderName.replace("%data%", bio.name);
-var role = HTMLheaderRole.replace("%data%", bio.role);
-var bioPic = HTMLbioPic.replace("%data%", bio.bioPic);
-var welcomeMsg = HTMLWelcomeMsg.replace("%data%", bio.welcomeMessage);
+bio.display = function () {
+    var personName = HTMLheaderName.replace("%data%", bio.name);
+    var role = HTMLheaderRole.replace("%data%", bio.role);
+    var biopic = HTMLbioPic.replace("%data%", bio.biopic);
+    var welcomeMsg = HTMLWelcomeMsg.replace("%data%", bio.welcomeMessage);
 
-var contactInfo = [];
-contactInfo.push(HTMLemail.replace("%data%", bio.contacts.email));
-contactInfo.push(HTMLgithub.replace("%data%", bio.contacts.github));
+    var contactInfo = [];
+    contactInfo.push(HTMLemail.replace("%data%", bio.contacts.email));
+    contactInfo.push(HTMLgithub.replace("%data%", bio.contacts.github));
+    // Twitter field is optional. Only display if present
+    if (typeof bio.contacts.twitter != 'undefined') {
+        console.log(bio.contacts.twitter);
+        contactInfo.push(HTMLtwitter.replace("%data%", bio.contacts.twitter));
+    }
+    contactInfo.push(HTMLlocation.replace("%data%", bio.contacts.location));
+    contactInfo.push(HTMLmobile.replace("%data%", bio.contacts.mobile));
 
-// Twitter field is optional. Only display if present
-if (typeof bio.contacts.twitter != 'undefined') {
-    console.log(bio.contacts.twitter);
-    contactInfo.push(HTMLtwitter.replace("%data%", bio.contacts.twitter));
-}
-contactInfo.push(HTMLlocation.replace("%data%", bio.contacts.location));
 
-$("#header").prepend(role);
-$("#header").prepend(personName);
-$("#header").append(bioPic);
-$("#header").append(welcomeMsg);
+    $("#header").prepend(role);
+    $("#header").prepend(personName);
+    $("#header").append(biopic);
+    $("#header").append(welcomeMsg);
 
-// SKILLS
-// Check if the individual actually has some skills
-if (bio.skills.length > 0) {
+    // SKILLS
+    // Check if the individual actually has some skills
+    if (bio.skills.length > 0) {
 
-    // title for the skill section
-    $("#header").append(HTMLskillsStart);
+        // title for the skill section
+        $("#header").append(HTMLskillsStart);
 
-    // append skills
-    for (var i = 0; i < bio.skills.length; i++) {
-        // Reuse the same HTMLskills template everytime (HTMLskills is left unchanged)
-        $("#skills").append(HTMLskills.replace("%data%", bio.skills[i]));
+        // append skills
+        for (var i = 0; i < bio.skills.length; i++) {
+            // Reuse the same HTMLskills template everytime (HTMLskills is left unchanged)
+            $("#skills").append(HTMLskills.replace("%data%", bio.skills[i]));
+        }
+    }
+
+    // CONTACT INFO
+    for (var index = 0; index < contactInfo.length; index++) {
+        $("#topContacts").append(contactInfo[index]);
+        $("#footerContacts").append(contactInfo[index]);
     }
 }
 
-// CONTACT INFO
-for (var index = 0; index < contactInfo.length; index++) {
-    $("#topContacts").append(contactInfo[index]);
-    $("#footerContacts").append(contactInfo[index]);
-}
+bio.display();
 
 // EDUCATION
 education.display = function() {
@@ -155,14 +160,14 @@ education.display = function() {
 education.display();
 
 // WORK
-function displayWork() {
+work.display = function () {
     // Check if the individual used to be employed
     if (work.jobs.length > 0) {
         // title
         $("#workExperience").append(HTMLworkStart);
 
         // Add work information for each job 
-        for (var i = 0; i < work.jobs; i++) {
+        for (var i = 0; i < work.jobs.length; i++) {
             var employer = HTMLworkEmployer.replace("%data%", work.jobs[i].employer);
             var workTitle = HTMLworkTitle.replace("%data%", work.jobs[i].title);
             var workLocation = HTMLworkLocation.replace("%data%", work.jobs[i].location);
@@ -181,7 +186,7 @@ function displayWork() {
 
 }
 
-displayWork();
+work.display();
 
 
 projects.display = function() {
